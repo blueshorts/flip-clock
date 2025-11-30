@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://clock-widget-iasandesign.netlify.app/ -->
+<html lang="en"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip Clock Widget</title>
+  <style>
+    :root {
+      --background-color: none;
+      --frame-color: #9f9b3a;
+      --text-color: #000000;
+      --flip-bg: #d0cd71;
+      --border-color: #000000;
+      --border-width: 2px;
+      --horizontal-bar-width: 1px;
+      --shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      --border-radius: 20px;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--background-color);
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .widget-container {
+      background-color: var(--frame-color);
+      padding: 5%;
+      padding-top: 20%;
+      padding-bottom: 5%;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      width: 100%;
+      height: auto;
+      max-width: 600px;
+      max-height: 500px;
+    }
+
+    .clock {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 15px;
+      position: relative;
+      width: 100%;
+    }
+
+    .time-box {
+      background-color: var(--flip-bg);
+      color: var(--text-color);
+      font-size: 5rem;
+      width: 120px;
+      height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: var(--border-width) solid var(--border-color);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .time-box::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: var(--horizontal-bar-width);
+      background: var(--border-color);
+      transform: translateY(-50%);
+    }
+
+    .am-pm {
+      font-size: 0.8rem;
+      color: var(--text-color);
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      margin-left: 5px;
+      white-space: nowrap;
+    }
+
+    .flip {
+      animation: flip 0.6s ease-in-out;
+    }
+
+    @keyframes flip {
+      0% {
+        transform: rotateX(0);
+      }
+      50% {
+        transform: rotateX(-90deg);
+      }
+      100% {
+        transform: rotateX(0);
+      }
+    }
+  </style>
+</head>
+<body __processed_4695060b-bcc0-4910-83bc-7aca2079e1f6__="true">
+  <div class="widget-container">
+    <div class="clock">
+      <div class="time-box" id="hours">12</div>
+      <div class="time-box" id="minutes">01</div>
+      <div class="am-pm" id="ampm">PM</div>
+    </div>
+  </div>
+
+  <script>
+    const hoursBox = document.getElementById("hours");
+    const minutesBox = document.getElementById("minutes");
+    const ampmBox = document.getElementById("ampm");
+    let lastHour = "";
+    let lastMinute = "";
+
+    function updateTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+
+      const formattedHour = String(hours).padStart(2, "0");
+      const formattedMinute = String(minutes).padStart(2, "0");
+
+      if (formattedHour !== lastHour) {
+        hoursBox.textContent = formattedHour;
+        hoursBox.classList.add("flip");
+        setTimeout(() => hoursBox.classList.remove("flip"), 600);
+        lastHour = formattedHour;
+      }
+
+      if (formattedMinute !== lastMinute) {
+        minutesBox.textContent = formattedMinute;
+        minutesBox.classList.add("flip");
+        setTimeout(() => minutesBox.classList.remove("flip"), 600);
+        lastMinute = formattedMinute;
+      }
+
+      ampmBox.textContent = ampm;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    function changeTheme(theme) {
+      const root = document.documentElement;
+      switch (theme) {
+        case "default":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "#9f9b3a");
+          root.style.setProperty("--text-color", "#000000");
+          root.style.setProperty("--flip-bg", "#d0cd71");
+          break;
+        case "butter":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "#fadd8d");
+          root.style.setProperty("--text-color", "black");
+          root.style.setProperty("--flip-bg", "#ffeab0");
+          break;
+        case "graphite":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "black");
+          root.style.setProperty("--text-color", "white");
+          root.style.setProperty("--flip-bg", "#3b3c42");
+          break;
+        case "lollipop":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "#ff80ab");
+          root.style.setProperty("--text-color", "black");
+          root.style.setProperty("--flip-bg", "#ffb7cf");
+          break;
+        case "klein":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "#2827bb");
+          root.style.setProperty("--text-color", "black");
+          root.style.setProperty("--flip-bg", "#f5efd8");
+          break;
+        case "sunburn":
+          root.style.setProperty("--background-color", "none");
+          root.style.setProperty("--frame-color", "#e41b1b");
+          root.style.setProperty("--text-color", "black");
+          root.style.setProperty("--flip-bg", "#faaab2");
+          break;
+      }
+    }
+  </script>
+
+</body></html>
