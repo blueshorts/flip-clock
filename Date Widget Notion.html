@@ -63,7 +63,7 @@
       const today = new Date();
       const hrs = today.getHours();
       const dayOfWeek = weekday[today.getDay()];
-      const dateStr = `${dayOfWeek}, ${monthNames[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+      const dateStr = `${dayOfWeek} ${monthNames[today.getMonth()]} ${today.getDate()}`;
 
       let greet;
       if (hrs < 12) {
